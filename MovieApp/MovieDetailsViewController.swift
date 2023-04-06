@@ -14,9 +14,6 @@ import PureLayout
 import MovieAppData
 class MovieDetailsViewController: UIViewController {
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
     var myImageView: UIImageView!
     var raiting: UILabel!
     var userScoreLabel: UILabel!
@@ -28,7 +25,6 @@ class MovieDetailsViewController: UIViewController {
     var likeButton : UIButton!
     var overviewLabel: UILabel!
     var summaryText : UITextView!
-    
     var topFirst: UILabel!
     var topSecond: UILabel!
     var topThird: UILabel!
@@ -39,6 +35,10 @@ class MovieDetailsViewController: UIViewController {
     var horizontalStackView1: UIStackView!
     var horizontalStackView2: UIStackView!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,10 +46,6 @@ class MovieDetailsViewController: UIViewController {
         
         buildViews()
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        myImageView.autoSetDimension(.height, toSize: CGFloat(2*view.bounds.height / 5))
-//    }
     
     private func buildViews() {
         createViews()
@@ -117,8 +113,6 @@ class MovieDetailsViewController: UIViewController {
         
         bottomThird = UILabel()
         view.addSubview(bottomThird)
-        
-        
     }
     
     private func styleViews() {
@@ -133,7 +127,6 @@ class MovieDetailsViewController: UIViewController {
             summaryText.text = details.summary
             durationLabel.text = String(details.duration/60) + "h " + String(details.duration%60) + "m"
             
-
             let outputFormatter = DateFormatter()
             outputFormatter.dateFormat = "yyyy-MM-dd"
             let showDate = outputFormatter.date(from:details.releaseDate)
@@ -143,7 +136,6 @@ class MovieDetailsViewController: UIViewController {
             movieDateLabel.text = resultString + " (US)"
             var text = ""
 
-            
             for category in categories{
                 if(text == ""){
                     text = String(describing: category)
@@ -184,7 +176,6 @@ class MovieDetailsViewController: UIViewController {
             topSecond.numberOfLines = 0
             horizontalStackView1.addArrangedSubview(topSecond)
             
-            
             textString = NSMutableAttributedString()
             memberName = NSAttributedString(string: members[2].name + "\n" , attributes: attributesBold)
             memberRole = NSAttributedString(string: members[2].role , attributes: attributesRegular)
@@ -217,14 +208,12 @@ class MovieDetailsViewController: UIViewController {
             verticalStackView.addArrangedSubview(horizontalStackView1)
             verticalStackView.addArrangedSubview(horizontalStackView2)
          
-            
         }else{
             print("Details not found or URL is nil")
         }
         
         myImageView.contentMode = .scaleAspectFill
         myImageView.clipsToBounds = true
-
         
         raiting.textColor = .white
         raiting.font = UIFont(name: "ProximaNova-Bold", size: 16)
@@ -249,14 +238,12 @@ class MovieDetailsViewController: UIViewController {
         
         likeButton.backgroundColor =  UIColor(hex: 0x757575)
         likeButton.frame.size = CGSize(width: 32.0, height: 32)
-//        likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.setImage(UIImage(named: "Vector.png"), for: .normal)
         likeButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         likeButton.layer.cornerRadius = likeButton.bounds.size.height/2
         likeButton.autoSetDimensions(to: likeButton.frame.size)
         likeButton.clipsToBounds = true
 
-        
         overviewLabel.textColor = .black
         overviewLabel.text = "Overview"
         overviewLabel.font = UIFont(name: "ProximaNova-Bold", size: 20)
@@ -278,9 +265,6 @@ class MovieDetailsViewController: UIViewController {
         horizontalStackView2.alignment = .fill
         horizontalStackView2.distribution = .fillEqually
         horizontalStackView2.spacing = 16
-        
-
-        
     }
     
     private func defineLayoutForViews() {
@@ -288,8 +272,6 @@ class MovieDetailsViewController: UIViewController {
         myImageView.autoPinEdge(toSuperviewEdge: .leading)
         myImageView.autoPinEdge(toSuperviewEdge: .trailing)
         myImageView.autoSetDimension(.height, toSize:327)
-//        myImageView.autoSetDimension(.width, toSize: view.bounds.width)
-
 
         raiting.autoPinEdge(toSuperviewSafeArea: .leading,withInset: 20)
         raiting.autoPinEdge(toSuperviewSafeArea: .top, withInset: 90)
@@ -314,7 +296,7 @@ class MovieDetailsViewController: UIViewController {
         
         likeButton.autoAlignAxis(.vertical, toSameAxisOf: raiting)
         likeButton.autoPinEdge(.top, to: .bottom, of: categorieLabel,withOffset: 16)
-//
+        
         overviewLabel.autoPinEdge(toSuperviewSafeArea: .leading,withInset: 20)
         overviewLabel.autoPinEdge(.top, to: .bottom, of: myImageView,withOffset: 22)
         
@@ -326,29 +308,5 @@ class MovieDetailsViewController: UIViewController {
         verticalStackView.autoPinEdge(.top, to: .bottom, of: summaryText, withOffset: 22)
         verticalStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
         verticalStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 16)
-
-
-    
-
     }
-    
 }
-extension UIImageView {
-    func loadFrom(URLAddress: String) {
-        guard let url = URL(string: URLAddress) else {
-            return
-        }
-        
-        DispatchQueue.global().async { [weak self] in
-            if let imageData = try? Data(contentsOf: url) {
-                if let loadedImage = UIImage(data: imageData) {
-                    DispatchQueue.main.async {
-                        self?.image = loadedImage
-                    }
-                }
-            }
-        }
-    }
-    
-}
-
