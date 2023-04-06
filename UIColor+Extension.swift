@@ -17,6 +17,4 @@ extension UIColor {
             alpha: alpha
         )
     }
-    
 }
-
