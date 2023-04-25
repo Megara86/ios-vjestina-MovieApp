@@ -54,12 +54,6 @@ class LoginViewController: UIViewController {
     }
     
     private func styleViews() {
-        
-        UIFont.familyNames.forEach({familyName in
-            let fontNames = UIFont.fontNames(forFamilyName: familyName)
-            print(familyName,fontNames)
-        })
-        
         view.backgroundColor = UIColor(hex: 0x0B253F)
         
         signinLabel.text = "Sign In"
