@@ -10,11 +10,14 @@ import UIKit
 import PureLayout
 import MovieAppData
 
+protocol MovieCategoryCollectionDelegate {
+    func delegateFunction(id: Int)
+}
+
 class MovieCategoryCollection:UITableViewCell{
     static let identifier = "MovieCategoryCollection"
     
-    
-    
+    var delegate: MovieCategoryCollectionDelegate?
     var collectionView: UICollectionView!
     var nameLabel: UILabel!
     var movies = [MovieModel]()
@@ -41,9 +44,8 @@ class MovieCategoryCollection:UITableViewCell{
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         flowLayout.minimumInteritemSpacing = 8
-        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
 
-        
         collectionView = UICollectionView(
             frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height),
             collectionViewLayout: flowLayout
@@ -95,7 +97,7 @@ extension MovieCategoryCollection: UICollectionViewDataSource,UICollectionViewDe
                 indexPath) as? MoviePictureCell else {
                 fatalError("Table view cannot dequeue a customcell")
             }
-        cell.set(url: movies[indexPath.row].imageUrl)
+        cell.set(url: movies[indexPath.row].imageUrl ,id: movies[indexPath.row].id)
         return cell
     }
     
@@ -103,14 +105,12 @@ extension MovieCategoryCollection: UICollectionViewDataSource,UICollectionViewDe
         return movies.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForHeaderInSection section: Int) -> UIView? {
-            let headerView = UIView()
-            headerView.backgroundColor = UIColor.clear
-            return headerView
-        }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             return CGSize(width: 125, height: 180)
         }
-
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.delegateFunction(id: movies[indexPath.row].id )
     }
+}

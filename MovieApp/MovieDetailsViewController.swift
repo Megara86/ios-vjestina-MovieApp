@@ -13,7 +13,6 @@ import SwiftUI
 import PureLayout
 import MovieAppData
 class MovieDetailsViewController: UIViewController {
-    
     var myImageView: UIImageView!
     var raiting: UILabel!
     var userScoreLabel: UILabel!
@@ -24,7 +23,7 @@ class MovieDetailsViewController: UIViewController {
     var durationLabel: UILabel!
     var likeButton : UIButton!
     var overviewLabel: UILabel!
-    var summaryText : UITextView!
+    var summaryText : UILabel!
     var topFirst: UILabel!
     var topSecond: UILabel!
     var topThird: UILabel!
@@ -34,6 +33,17 @@ class MovieDetailsViewController: UIViewController {
     var verticalStackView: UIStackView!
     var horizontalStackView1: UIStackView!
     var horizontalStackView2: UIStackView!
+    var id: Int!
+
+    
+    init(id: Int) {
+        self.id = id
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -43,9 +53,22 @@ class MovieDetailsViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
+        navigationItem.leftBarButtonItem =  UIBarButtonItem(title: "Movie List", style: .done, target: self, action: #selector(handleNextButton))
+        let titleItem = UILabel()
+        titleItem.text = "Movie details"
+        navigationItem.titleView = titleItem
         buildViews()
     }
+    
+    @objc func handleNextButton() {
+        print("Clicked")
+        
+//        let vc = MovieCategoryViewController()
+//        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.popViewController(animated: true)
+        
+    }
+    
     
     private func buildViews() {
         createViews()
@@ -84,7 +107,7 @@ class MovieDetailsViewController: UIViewController {
         likeButton = UIButton(type: .custom)
         view.addSubview(likeButton)
         
-        summaryText = UITextView()
+        summaryText = UILabel()
         view.addSubview(summaryText)
         
         verticalStackView = UIStackView()
@@ -117,7 +140,7 @@ class MovieDetailsViewController: UIViewController {
     
     private func styleViews() {
         // Do any additional setup after loading the view.
-        if let details = MovieUseCase().getDetails(id: 111161){
+        if let details = MovieUseCase().getDetails(id: id){
             let url = details.imageUrl
             
             raiting.text = String(details.rating)
@@ -250,6 +273,7 @@ class MovieDetailsViewController: UIViewController {
         
         summaryText.textColor = .black
         summaryText.font = UIFont(name: "ProximaNova-Regular", size: 14)
+        summaryText.numberOfLines = 0
         
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .fill
@@ -268,9 +292,9 @@ class MovieDetailsViewController: UIViewController {
     }
     
     private func defineLayoutForViews() {
-        myImageView.autoPinEdge(toSuperviewEdge: .top)
-        myImageView.autoPinEdge(toSuperviewEdge: .leading)
-        myImageView.autoPinEdge(toSuperviewEdge: .trailing)
+        myImageView.autoPinEdge(toSuperviewSafeArea: .top)
+        myImageView.autoPinEdge(toSuperviewSafeArea: .leading)
+        myImageView.autoPinEdge(toSuperviewSafeArea: .trailing)
         myImageView.autoSetDimension(.height, toSize:327)
 
         raiting.autoPinEdge(toSuperviewSafeArea: .leading,withInset: 20)
@@ -303,7 +327,7 @@ class MovieDetailsViewController: UIViewController {
         summaryText.autoPinEdge(toSuperviewSafeArea: .leading,withInset: 10)
         summaryText.autoPinEdge(.top, to: .bottom, of: overviewLabel,withOffset: 8)
         summaryText.autoPinEdge(toSuperviewSafeArea: .trailing,withInset: 10)
-        summaryText.autoPinEdge(toSuperviewEdge: .bottom,withInset: 392)
+//        summaryText.autoPinEdge(toSuperviewEdge: .bottom,withInset: 392)
         
         verticalStackView.autoPinEdge(.top, to: .bottom, of: summaryText, withOffset: 22)
         verticalStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
