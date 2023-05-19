@@ -102,7 +102,7 @@ class MovieTableViewCell: UITableViewCell {
     }
 
     override func layoutSubviews() {
-            let margins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+            let margins = UIEdgeInsets(top:0 , left: 8, bottom: 8, right: 8)
             contentView.frame = contentView.frame.inset(by: margins)
             self.layer.cornerRadius = 10
             self.layer.shadowRadius = 10

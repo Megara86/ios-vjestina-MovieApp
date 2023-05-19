@@ -13,9 +13,11 @@ import MovieAppData
 class MoviePictureCell: UICollectionViewCell {
     static let identifier = "MoviePictureCell"
     
+    var navigationController: UINavigationController!    
     var img : UIImage!
     var imgView: UIImageView!
     var likeButton : UIButton!
+    var id : Int!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -71,9 +73,20 @@ class MoviePictureCell: UICollectionViewCell {
         likeButton.autoPinEdge(.leading, to: .leading, of: imgView,withOffset: 8)
     }
     
-    func set(url: String) {
+    func set(url: String,id: Int) {
         imgView.loadFrom(URLAddress: url)
+        self.id = id
         
     }
     
+}
+
+extension MoviePictureCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        let movieDetailsViewsController = MovieDetailsViewController(id: id)
+        movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
+        
+        self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
+    }
 }

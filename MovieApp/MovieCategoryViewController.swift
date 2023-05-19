@@ -9,6 +9,12 @@ import Foundation
 import UIKit
 import PureLayout
 import MovieAppData
+
+protocol Coordinator {
+
+    func start()
+}
+
 class MovieCategoryViewController: UIViewController {
     
     var tableView: UITableView!
@@ -16,7 +22,18 @@ class MovieCategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Movie List"
+        
+        view.isUserInteractionEnabled = true
+
         buildViews()
+    }
+    
+    @objc func collectionCellClicked() {
+//        self.navigationController?.popViewController(animated: true)
+        
+//        let vc = MovieDetailsViewController()
+//        navigationController?.pushViewController(vc, animated: true)
     }
     
     override func viewDidLayoutSubviews() {
@@ -27,6 +44,7 @@ class MovieCategoryViewController: UIViewController {
     private func buildViews() {
         createViews()
         styleViews()
+        defineLayoutForViews()
     }
     
     private func createViews() {
@@ -41,6 +59,12 @@ class MovieCategoryViewController: UIViewController {
         tableView.dataSource = self
         tableView.separatorStyle = .none
         
+    }
+    private func defineLayoutForViews() {
+        tableView.autoPinEdge(toSuperviewSafeArea: .top)
+        tableView.autoPinEdge(toSuperviewSafeArea: .bottom)
+        tableView.autoPinEdge(toSuperviewSafeArea: .leading)
+        tableView.autoPinEdge(toSuperviewSafeArea: .trailing)
     }
 }
 
@@ -58,6 +82,7 @@ extension MovieCategoryViewController:UITableViewDataSource, UITableViewDelegate
             if(indexPath.row == 0){
                 let movieCollection = MovieUseCase().popularMovies
                 let name = "What's popular"
+            
                 cell.setCategory(movies: movieCollection, name: name)
             }else if(indexPath.row == 1){
                 let movieCollection = MovieUseCase().freeToWatchMovies
@@ -68,15 +93,16 @@ extension MovieCategoryViewController:UITableViewDataSource, UITableViewDelegate
                 let name = "Trending"
                 cell.setCategory(movies: movieCollection, name: name)
             }
+            
+            cell.delegate = self
+            
             return cell
         }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-            let headerView = UIView()
-            headerView.backgroundColor = UIColor.clear
-            
-            return headerView
-        }
+}
 
+extension MovieCategoryViewController: MovieCategoryCollectionDelegate {
+    func delegateFunction(id: Int) {
+        let vc = MovieDetailsViewController(id:id)
+        navigationController?.pushViewController(vc, animated: true)
     }
-
+}

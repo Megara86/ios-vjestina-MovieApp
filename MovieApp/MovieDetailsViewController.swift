@@ -13,7 +13,6 @@ import SwiftUI
 import PureLayout
 import MovieAppData
 class MovieDetailsViewController: UIViewController {
-    
     var myImageView: UIImageView!
     var raiting: UILabel!
     var userScoreLabel: UILabel!
@@ -24,7 +23,7 @@ class MovieDetailsViewController: UIViewController {
     var durationLabel: UILabel!
     var likeButton : UIButton!
     var overviewLabel: UILabel!
-    var summaryText : UITextView!
+    var summaryText : UILabel!
     var topFirst: UILabel!
     var topSecond: UILabel!
     var topThird: UILabel!
@@ -34,6 +33,17 @@ class MovieDetailsViewController: UIViewController {
     var verticalStackView: UIStackView!
     var horizontalStackView1: UIStackView!
     var horizontalStackView2: UIStackView!
+    var id: Int!
+
+    
+    init(id: Int) {
+        self.id = id
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -41,10 +51,46 @@ class MovieDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = .white
-        
+        navigationItem.leftBarButtonItem =  UIBarButtonItem(title: "Movie List",style: .done, target: self, action:
+                                                                #selector(handleNextButton))
+        navigationItem.leftBarButtonItem?.tintColor = UIColor(hex: 0x007AFF)
+        let titleItem = UILabel()
+        titleItem.text = "Movie details"
+  
+
+        navigationItem.titleView = titleItem
         buildViews()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            self.raiting.transform = .identity
+            self.userScoreLabel.transform = .identity
+            self.movieNameLabel.transform = .identity
+            self.movieYearLabel.transform = .identity
+            self.movieDateLabel.transform = .identity
+            self.movieNameLabel.transform = .identity
+            self.categorieLabel.transform = .identity
+            self.durationLabel.transform = .identity
+            self.summaryText.transform = .identity
+
+        })
+        
+        UIView.animate(withDuration: 0.3,delay: 0.2, animations: {
+            self.verticalStackView.alpha = 1
+
+        })
+        
+
+    }
+    
+    @objc func handleNextButton() {
+        navigationController?.popViewController(animated: true)
     }
     
     private func buildViews() {
@@ -84,7 +130,7 @@ class MovieDetailsViewController: UIViewController {
         likeButton = UIButton(type: .custom)
         view.addSubview(likeButton)
         
-        summaryText = UITextView()
+        summaryText = UILabel()
         view.addSubview(summaryText)
         
         verticalStackView = UIStackView()
@@ -117,7 +163,7 @@ class MovieDetailsViewController: UIViewController {
     
     private func styleViews() {
         // Do any additional setup after loading the view.
-        if let details = MovieUseCase().getDetails(id: 111161){
+        if let details = MovieUseCase().getDetails(id: id){
             let url = details.imageUrl
             
             raiting.text = String(details.rating)
@@ -217,24 +263,35 @@ class MovieDetailsViewController: UIViewController {
         
         raiting.textColor = .white
         raiting.font = UIFont(name: "ProximaNova-Bold", size: 16)
+        raiting.transform = raiting.transform.translatedBy(x: view.frame.width * 2, y: -view.frame.height)
+
         
         userScoreLabel.text = "User score"
         userScoreLabel.textColor = .white
         userScoreLabel.font = UIFont(name: "ProximaNova-Regular", size: 14)
+        userScoreLabel.transform = userScoreLabel.transform.translatedBy(x: -view.frame.width, y:0)
+
         
         movieNameLabel.textColor = .white
         movieNameLabel.font = UIFont(name: "ProximaNova-Bold", size: 20)
         movieYearLabel.textColor = .white
         movieYearLabel.font = UIFont(name: "ProximaNova-Regular", size: 20)
-        
+        movieNameLabel.transform = movieNameLabel.transform.translatedBy(x: -view.frame.width, y:0)
+        movieYearLabel.transform = movieYearLabel.transform.translatedBy(x: -view.frame.width, y:0)
+
+
         movieDateLabel.textColor = .white
         movieDateLabel.font = UIFont(name: "ProximaNova-Regular", size: 14)
-        
+        movieDateLabel.transform = movieDateLabel.transform.translatedBy(x: -view.frame.width, y:0)
+
         categorieLabel.textColor = .white
         categorieLabel.font = UIFont(name: "ProximaNova-Regular", size: 14)
-        
+        categorieLabel.transform = categorieLabel.transform.translatedBy(x: -view.frame.width, y:0)
+
         durationLabel.textColor = .white
         durationLabel.font = UIFont(name: "ProximaNova-Bold", size: 14)
+        durationLabel.transform = durationLabel.transform.translatedBy(x: -view.frame.width, y:0)
+
         
         likeButton.backgroundColor =  UIColor(hex: 0x757575)
         likeButton.frame.size = CGSize(width: 32.0, height: 32)
@@ -250,11 +307,14 @@ class MovieDetailsViewController: UIViewController {
         
         summaryText.textColor = .black
         summaryText.font = UIFont(name: "ProximaNova-Regular", size: 14)
-        
+        summaryText.numberOfLines = 0
+        summaryText.transform = summaryText.transform.translatedBy(x: -view.frame.width, y:0)
+
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .fill
         verticalStackView.distribution = .fillEqually
         verticalStackView.spacing = 24
+        verticalStackView.alpha = 0
                 
         horizontalStackView1.axis = .horizontal
         horizontalStackView1.alignment = .fill
@@ -268,16 +328,16 @@ class MovieDetailsViewController: UIViewController {
     }
     
     private func defineLayoutForViews() {
-        myImageView.autoPinEdge(toSuperviewEdge: .top)
-        myImageView.autoPinEdge(toSuperviewEdge: .leading)
-        myImageView.autoPinEdge(toSuperviewEdge: .trailing)
-        myImageView.autoSetDimension(.height, toSize:327)
+        myImageView.autoPinEdge(toSuperviewSafeArea: .top)
+        myImageView.autoPinEdge(toSuperviewSafeArea: .leading)
+        myImageView.autoPinEdge(toSuperviewSafeArea: .trailing)
+        myImageView.autoSetDimension(.height, toSize:300)
 
         raiting.autoPinEdge(toSuperviewSafeArea: .leading,withInset: 20)
-        raiting.autoPinEdge(toSuperviewSafeArea: .top, withInset: 90)
+        raiting.autoPinEdge(toSuperviewSafeArea: .top, withInset: 135)
         
         userScoreLabel.autoPinEdge(.leading, to: .trailing, of: raiting, withOffset: 8)
-        userScoreLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 91)
+        userScoreLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 136)
         
         movieNameLabel.autoPinEdge(.top, to: .bottom, of: raiting, withOffset: 16)
         movieNameLabel.autoPinEdge(toSuperviewSafeArea: .leading,withInset: 20)
@@ -303,7 +363,7 @@ class MovieDetailsViewController: UIViewController {
         summaryText.autoPinEdge(toSuperviewSafeArea: .leading,withInset: 10)
         summaryText.autoPinEdge(.top, to: .bottom, of: overviewLabel,withOffset: 8)
         summaryText.autoPinEdge(toSuperviewSafeArea: .trailing,withInset: 10)
-        summaryText.autoPinEdge(toSuperviewEdge: .bottom,withInset: 392)
+//        summaryText.autoPinEdge(toSuperviewEdge: .bottom,withInset: 392)
         
         verticalStackView.autoPinEdge(.top, to: .bottom, of: summaryText, withOffset: 22)
         verticalStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
